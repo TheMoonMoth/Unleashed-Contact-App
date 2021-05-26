@@ -1,0 +1,14 @@
+.contactFormContainer {
+  flex-direction: 'column';
+}
+
+.contactItem {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid black;
+}
+
+.contactItemDetail {
+  display: flex;
+  flex: 1;
+}

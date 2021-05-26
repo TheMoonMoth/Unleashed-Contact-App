@@ -1,24 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
+import { ContactPage } from './pages/ContactPage';
+
+const App: React.FC = () => {
   return (
     <div className="App">
+      {/* TODO: make header its own component */}
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <img src={'https://via.placeholder.com/50'} className="contact-app-logo" alt="logo" />
+        <h1>
+          My UT Phone Book
+        </h1>
       </header>
+      <ContactPage />
     </div>
   );
 }
