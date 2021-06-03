@@ -1,5 +1,7 @@
 import React from 'react';
 import './styles.css';
+import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input';
 
 interface ContactFormProps {
   handleAddContact: Function,
@@ -13,10 +15,11 @@ export class ContactForm extends React.Component<ContactFormProps, any> {
     this.state = {
       currentName: '',
       currentNumber: '',
+      currentNumberValidated: false,
     }
   }
 
-  handleInputChange = (input: InputType, value: string) => {
+  handleInputChange = (input: InputType, value: string = '') => {
     this.setState({ [input]: value })
   }
 
@@ -63,8 +66,13 @@ export class ContactForm extends React.Component<ContactFormProps, any> {
       <form className='contactFormContainer' onSubmit={this.handleSubmit} >
         <h3 className='contactFormHeaderText'>Add New Contact</h3>
         <div className='contactFormInputContainer' >
-          <input placeholder="name" value={this.state.currentName}onChange={e => this.handleInputChange('currentName', e.target.value)} />
-          <input placeholder="phone number" value={this.state.currentNumber}onChange={e => this.handleInputChange('currentNumber', e.target.value)} />
+          <input placeholder="Enter full name" value={this.state.currentName}onChange={e => this.handleInputChange('currentName', e.target.value)} />
+          <PhoneInput
+            defaultCountry="USA"
+            placeholder="Enter phone number"
+            value={this.state.currentNumber}
+            onChange={phoneNumber => this.handleInputChange('currentNumber', phoneNumber)}
+          />
           <input type='submit' value='Add' />
         </div>
       </form>

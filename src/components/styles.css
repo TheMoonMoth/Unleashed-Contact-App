@@ -12,3 +12,8 @@
   display: flex;
   flex: 1;
 }
+
+.contactFormInputContainer {
+  display: flex;
+  flex-direction: row;
+}
