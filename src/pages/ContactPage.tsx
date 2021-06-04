@@ -24,6 +24,7 @@ export class ContactPage extends React.Component<any, any> {
    formatNumber = (number: any) => {
     const formattedNumber = [];
     const splitNumber = number.split('');
+    splitNumber.splice(0, 2);
     formattedNumber.push('(' + splitNumber.splice(0, 3).join('') + ')' + ' ');
     formattedNumber.push(splitNumber.splice(0, 3).join('') + '-');
     formattedNumber.push(splitNumber.splice(0, 4).join(''));

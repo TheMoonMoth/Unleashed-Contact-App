@@ -1,10 +1,17 @@
 import React from 'react';
 import './styles.css';
 import 'react-phone-number-input/style.css';
-import PhoneInput from 'react-phone-number-input';
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
 
 interface ContactFormProps {
   handleAddContact: Function,
+}
+
+interface ContactFormState {
+  currentName: string,
+  currentNumber: string,
+  currentNumberValidated?: boolean,
+  currentNameValidated?: boolean,
 }
 
 declare type InputType = 'currentName' | 'currentNumber'
@@ -14,8 +21,9 @@ export class ContactForm extends React.Component<ContactFormProps, any> {
     super(props)
     this.state = {
       currentName: '',
+      currentNameValidated: undefined,
       currentNumber: '',
-      currentNumberValidated: false,
+      currentNumberValidated: undefined,
     }
   }
 
@@ -23,42 +31,41 @@ export class ContactForm extends React.Component<ContactFormProps, any> {
     this.setState({ [input]: value })
   }
 
-  nameIsValid = () => {
-    // Make sure this.state.currentName is at least 1 characters long and is String
-    return this.state.currentName.length > 0; 
-  }
-
-  numberIsValid = () => {
-    // Make sure this.state.currentNumber is 10 numbers long
-    // Pontential to add other criteria
-    return true; // always true for development
-  }
-
   resetState = () => {
     this.setState({
       currentName: '',
+      currentNameValidated: undefined,
       currentNumber: '',
+      currentNumberValidated: undefined,
     })
   }
 
-  handleSubmit = (e: any) => {
+  validateName = async () => {
+    // Basic validation that something was input for name.
+    // Should add string santization as well.
+    const nameIsValid = (this.state.currentName.length >= 1 && !!this.state.currentName.match(/^[A-Za-z ]+$/))
+    this.setState((prevState: ContactFormState) => ({ currentNameValidated: nameIsValid }))
+  }
+
+  validateNumber = async () => {
+    this.setState((prevState: ContactFormState) => ({ currentNumberValidated: isValidPhoneNumber(prevState.currentNumber) }))
+  }
+
+  handleSubmit = async (e: any) => {
     e.preventDefault()
     e.stopPropagation()
-    if (!this.nameIsValid()) {
-      // throw error here to be picked up by UI element
-      return
-    }
-    if (!this.numberIsValid()) {
-      // throw error here to be picked up by UI element
-      return
-    }
+    
+    await this.validateNumber();
+    await this.validateName();
 
-    const newContact = {
-      name: this.state.currentName,
-      number: this.state.currentNumber,
+    if (this.state.currentNameValidated && this.state.currentNumberValidated) {
+      const newContact = {
+        name: this.state.currentName,
+        number: this.state.currentNumber,
+      }
+      this.props.handleAddContact(newContact);
+      this.resetState();
     }
-    this.props.handleAddContact(newContact);
-    this.resetState();
   }
 
   render() {
@@ -68,12 +75,22 @@ export class ContactForm extends React.Component<ContactFormProps, any> {
         <div className='contactFormInputContainer' >
           <input placeholder="Enter full name" value={this.state.currentName}onChange={e => this.handleInputChange('currentName', e.target.value)} />
           <PhoneInput
-            defaultCountry="USA"
+            defaultCountry="US"
+            countries={["US"]}
+            international={false}
             placeholder="Enter phone number"
             value={this.state.currentNumber}
             onChange={phoneNumber => this.handleInputChange('currentNumber', phoneNumber)}
           />
           <input type='submit' value='Add' />
+        </div>
+        <div className="inputMessagesContainer">
+        {this.state.currentNameValidated === false && (
+          <p className="inputErrorMessage">Please enter a valid name</p>
+        )}
+        {this.state.currentNumberValidated === false && (
+          <p className="inputErrorMessage">Please enter a valid phone number</p>
+        )}
         </div>
       </form>
     )
