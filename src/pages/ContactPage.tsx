@@ -8,22 +8,31 @@ export interface Contacts {
   [index: number]: { name: string, number: string }
 }
 
-interface ContactType {
+export interface ContactType {
   name: string,
   number: string,
 }
 
-export class ContactPage extends React.Component<any, any> {
-   constructor(props: any) {
+interface ContactJson {
+  contacts: Array<ContactType>
+}
+
+interface ContactPageProps {} 
+interface ContactPageState {
+  contacts: ContactJson,
+}
+
+export class ContactPage extends React.Component<ContactPageProps, ContactPageState> {
+   constructor(props: ContactPageProps) {
      super(props)
      this.state = {
        contacts: contacts,
      }
    }
 
-   formatNumber = (number: any) => {
+   formatNumber = (input: string) => {
     const formattedNumber = [];
-    const splitNumber = number.split('');
+    const splitNumber = input.split('');
     splitNumber.splice(0, 2);
     formattedNumber.push('(' + splitNumber.splice(0, 3).join('') + ')' + ' ');
     formattedNumber.push(splitNumber.splice(0, 3).join('') + '-');
@@ -32,7 +41,7 @@ export class ContactPage extends React.Component<any, any> {
    }
 
    handleAddContact = (newContact: ContactType) => {
-    this.setState((prevState: any) => ({
+    this.setState((prevState: ContactPageState) => ({
         contacts: {
           contacts: [...prevState.contacts.contacts, newContact]
         }
@@ -41,7 +50,7 @@ export class ContactPage extends React.Component<any, any> {
    }
 
    handleRemoveContact = (index: number) => {
-    this.setState((prevState: any) => {
+    this.setState((prevState: ContactPageState) => {
       const newList = prevState.contacts.contacts;
       newList.splice(index, 1);
       return {

@@ -16,7 +16,7 @@ interface ContactFormState {
 
 declare type InputType = 'currentName' | 'currentNumber'
 
-export class ContactForm extends React.Component<ContactFormProps, any> {
+export class ContactForm extends React.Component<ContactFormProps, ContactFormState> {
   constructor(props: ContactFormProps) {
     super(props)
     this.state = {
@@ -28,7 +28,7 @@ export class ContactForm extends React.Component<ContactFormProps, any> {
   }
 
   handleInputChange = (input: InputType, value: string = '') => {
-    this.setState({ [input]: value })
+    this.setState({ [input]: value } as unknown as ContactFormState)
   }
 
   resetState = () => {
@@ -51,7 +51,7 @@ export class ContactForm extends React.Component<ContactFormProps, any> {
     this.setState((prevState: ContactFormState) => ({ currentNumberValidated: isValidPhoneNumber(prevState.currentNumber) }))
   }
 
-  handleSubmit = async (e: any) => {
+  handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
     e.stopPropagation()
     
@@ -68,7 +68,7 @@ export class ContactForm extends React.Component<ContactFormProps, any> {
     }
   }
 
-  render() {
+  render(): React.ReactNode {
     return (
       <form className='contactFormContainer' onSubmit={this.handleSubmit} >
         <h3 className='contactFormHeaderText'>Add New Contact</h3>
